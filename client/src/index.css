@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── MPS BRAND PALETTE ─── */
+:root {
+  --background: 38 30% 96%;
+  --foreground: 228 38% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 228 38% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 228 38% 12%;
+  --primary: 228 38% 18%;
+  --primary-foreground: 38 43% 93%;
+  --secondary: 36 32% 90%;
+  --secondary-foreground: 228 38% 18%;
+  --muted: 36 20% 92%;
+  --muted-foreground: 228 15% 45%;
+  --accent: 36 32% 46%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 36 16% 84%;
+  --input: 36 16% 88%;
+  --ring: 36 32% 46%;
+  --radius: 0.5rem;
+
+  /* MPS custom */
+  --navy: #1C2340;
+  --navy-dark: #0F1520;
+  --gold: #9B7E52;
+  --gold-light: #C4A97A;
+  --cream: #F5F0E8;
+  --cream-dark: #EDE5D8;
+}
+
+.dark {
+  --background: 228 40% 9%;
+  --foreground: 38 20% 88%;
+  --card: 228 35% 13%;
+  --card-foreground: 38 20% 88%;
+  --popover: 228 35% 13%;
+  --popover-foreground: 38 20% 88%;
+  --primary: 36 32% 56%;
+  --primary-foreground: 228 38% 10%;
+  --secondary: 228 25% 20%;
+  --secondary-foreground: 38 20% 85%;
+  --muted: 228 25% 17%;
+  --muted-foreground: 228 15% 55%;
+  --accent: 36 32% 56%;
+  --accent-foreground: 228 38% 10%;
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 228 25% 22%;
+  --input: 228 25% 20%;
+  --ring: 36 32% 56%;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100dvh;
+}
+
+/* ─── MPS Header bar ─── */
+.mps-header {
+  background: var(--navy);
+  border-bottom: 3px solid var(--gold);
+}
+
+/* ─── Trilingual field label ─── */
+.tri-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 6px;
+}
+.tri-label .en  { font-weight: 600; font-size: 0.875rem; color: hsl(var(--foreground)); }
+.tri-label .th  { font-size: 0.8rem;  color: hsl(var(--muted-foreground)); font-family: 'Noto Sans Thai', sans-serif; }
+.tri-label .my  { font-size: 0.78rem; color: hsl(var(--muted-foreground)); font-family: 'Pyidaungsu', sans-serif; }
+
+/* ─── Step wizard progress ─── */
+.step-indicator {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+.step-indicator.active   { background: var(--gold); color: white; }
+.step-indicator.done     { background: var(--navy); color: white; }
+.step-indicator.inactive { background: hsl(var(--border)); color: hsl(var(--muted-foreground)); }
+
+/* ─── Add-on cards ─── */
+.addon-card {
+  border: 1.5px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: hsl(var(--card));
+}
+.addon-card:hover { border-color: var(--gold); background: hsl(var(--secondary)); }
+.addon-card.selected {
+  border-color: var(--gold);
+  background: #FBF7F0;
+  box-shadow: 0 0 0 3px rgba(155,126,82,0.15);
+}
+.dark .addon-card.selected { background: hsl(228 35% 16%); }
+
+/* ─── Department selector ─── */
+.dept-card {
+  border: 2px solid hsl(var(--border));
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  background: hsl(var(--card));
+}
+.dept-card:hover   { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(28,35,64,0.1); }
+.dept-card.active  { border-color: var(--navy); background: var(--navy); color: white; box-shadow: 0 6px 20px rgba(28,35,64,0.25); }
+
+/* ─── Generate button ─── */
+.btn-generate {
+  background: var(--navy);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-generate:hover { background: var(--navy-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(28,35,64,0.3); }
+.btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ─── Gold accent pill ─── */
+.gold-pill {
+  background: rgba(155,126,82,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(155,126,82,0.3);
+  border-radius: 99px;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ─── Section divider ─── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+  margin: 24px 0;
+  opacity: 0.4;
+}
+
+/* ─── Loading spinner ─── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 20px; height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Fade-in animation ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.3s ease forwards; }
+
+/* ─── Success screen ─── */
+.success-icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--navy), var(--gold));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+}
