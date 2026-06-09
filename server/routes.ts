@@ -3,13 +3,91 @@ import { createServer, type Server } from "http";
 import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
+import https from "https";
+import { requireAuth } from "./auth";
+
+// ── Airtable sync ────────────────────────────────────────────────────────────
+const AT_PAT      = process.env.AIRTABLE_PAT || "";
+const AT_BASE     = "appSM9dyGsBlR1Ifq";
+const AT_TABLE    = "tblLXPO5Ukr0r763N";
+
+function syncToAirtable(data: any): void {
+  if (!AT_PAT) return; // skip if no token configured
+
+  const p       = data.contractType === "b2b" ? null : data.employee;
+  const col     = data.contractType === "b2b" ? data.collaborator : null;
+  const person  = p || col || {};
+  const dept    = data.department || "B2B";
+
+  const deptLabel: Record<string,string> = {
+    housekeeping: "Housekeeping",
+    office:       "Office / Management",
+    pool:         "Pool, Garden & Handyman",
+  };
+
+  const managedVillas = (person.managedProperties || person.properties || [])
+    .map((v: any) => `${v.propertyName} (Pack ${v.managementPackRate ?? "-"}% / Cut ${v.commissionRate}%)`)
+    .join("\n");
+
+  const roles = col?.roles?.join(", ") || person.additionalRoles?.join(", ") || "";
+
+  const fields: Record<string, any> = {
+    "Full Name":          person.fullName         || "",
+    "Nickname":           person.nickname         || "",
+    "Date of Birth":      person.dateOfBirth      || undefined,
+    "Nationality":        person.nationality      || "",
+    "ID / Passport":      person.idPassport       || "",
+    "Phone":              person.phone            || "",
+    "Email":              person.email            || "",
+    "Address":            person.address          || "",
+    "Contract Type":      data.contractType === "b2b" ? "B2B Collaboration" : "Employment",
+    "Department":         deptLabel[dept] || dept,
+    "Position / Roles":   p?.position || (col?.roles || []).join(", ") || "",
+    "Additional Scope":   roles,
+    "Start Date":         p?.startDate            || undefined,
+    "Salary THB":         p?.salary               || undefined,
+    "Contract Languages": (data.languages || []).join(", "),
+    "Is Company (B2B)":   col?.isCompany          || false,
+    "Company Name":       col?.companyName        || "",
+    "Company Registration": col?.companyRegistration || "",
+    "Managed Villas":     managedVillas,
+    "Contract Generated": new Date().toISOString(),
+  };
+
+  // Remove undefined / empty values
+  Object.keys(fields).forEach(k => {
+    if (fields[k] === undefined || fields[k] === "") delete fields[k];
+  });
+
+  const body = JSON.stringify({ records: [{ fields }] });
+  const req  = https.request({
+    hostname: "api.airtable.com",
+    path:     `/v0/${AT_BASE}/${AT_TABLE}`,
+    method:   "POST",
+    headers:  {
+      "Authorization": `Bearer ${AT_PAT}`,
+      "Content-Type":  "application/json",
+      "Content-Length": Buffer.byteLength(body),
+    },
+  }, (res) => {
+    let out = "";
+    res.on("data", (c) => out += c);
+    res.on("end", () => {
+      if (res.statusCode !== 200) console.error("Airtable sync error:", res.statusCode, out.slice(0, 200));
+      else console.log("Airtable: staff record saved for", person.fullName);
+    });
+  });
+  req.on("error", (e) => console.error("Airtable sync failed:", e.message));
+  req.write(body);
+  req.end();
+}
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
 
-  app.post("/api/generate", (req, res) => {
+  app.post("/api/generate", requireAuth, (req, res) => {
     const data = req.body;
 
     if (!data || !data.contractType) {
@@ -88,9 +166,9 @@ export async function registerRoutes(
       fileStream.pipe(res);
 
       fileStream.on("end", () => {
-        try {
-          fs.unlinkSync(outputPath);
-        } catch (_) {/* ignore cleanup errors */}
+        try { fs.unlinkSync(outputPath); } catch (_) {/* ignore */}
+        // Fire-and-forget Airtable sync (never blocks the download)
+        try { syncToAirtable(data); } catch (_) {/* ignore */}
       });
 
       fileStream.on("error", (err) => {

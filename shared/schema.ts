@@ -35,6 +35,10 @@ export const employeeSchema = z.object({
   startDate:          z.string().min(1, "Start date required"),
   /** For managers/revenue roles: list of properties they oversee + commission */
   managedProperties:  z.array(managedPropertySchema).optional(),
+  /** Bonus system amounts */
+  bonusPoolAmount:    z.coerce.number().optional(),  // THB per 6-month period
+  eomRewardAmount:    z.coerce.number().optional(),  // Employee of month reward
+  penaltyCapAmount:   z.coerce.number().optional(),  // Max penalty per event
 });
 
 // ── Collaborator schema (B2B) ─────────────────────────────────────────────────

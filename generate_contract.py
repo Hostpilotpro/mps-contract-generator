@@ -60,10 +60,10 @@ def ensure_fonts():
     dl('Playfair',      PLAYFAIR_REG)
     dl('Playfair-Bold', PLAYFAIR_BOLD)
     for name, fpath in [
-        ('NotoThai',     '/usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf'),
-        ('NotoThai-Bold','/usr/share/fonts/truetype/noto/NotoSansThai-Bold.ttf'),
-        ('NotoMM',       '/home/user/workspace/contract-app/fonts/Pyidaungsu-Regular.ttf'),
-        ('NotoMM-Bold',  '/home/user/workspace/contract-app/fonts/Pyidaungsu-Bold.ttf'),
+        (str(Path(__file__).parent / 'fonts' / 'NotoSansThai-Regular.ttf')),
+        ('NotoThai-Bold',str(Path(__file__).parent / 'fonts' / 'NotoSansThai-Bold.ttf')),
+        ('NotoMM',       str(Path(__file__).parent / 'fonts' / 'Zawgyi-One.ttf')),
+        ('NotoMM-Bold',  str(Path(__file__).parent / 'fonts' / 'Zawgyi-One.ttf')),
     ]:
         try: pdfmetrics.registerFont(TTFont(name, fpath))
         except Exception: pass
@@ -294,7 +294,7 @@ def build_ea_en(data):
             [Paragraph("Employer:", s['body_b']),
              Paragraph("<b>Mister Property Siam Co.,LTD</b><br/>Tax ID: 0845566025288<br/>"
                        "Registered address: 115/26 Moo 6, Bo Phut, Koh Samui, Surat Thani 84320, Thailand<br/>"
-                       "Email: info@mrpropertysiam.com", s['body'])],
+                       "Email: finance@mrpropertysiam.com", s['body'])],
             [Paragraph("Employee:", s['body_b']),
              Paragraph(f"<b>Full Name:</b> {fname}{nick_str}<br/><b>Nationality:</b> {nat}<br/>"
                        f"<b>ID / Passport No.:</b> {idno}<br/><b>Address:</b> {addr}<br/>"
@@ -325,12 +325,12 @@ def build_ea_en(data):
         # 3 Probation
         story.append(sdiv()); story.append(Paragraph("3.  Probation Period", s['sec_head']))
         story.append(navy_box(
-            "IMPORTANT — Probation is 119 days (one hundred and nineteen), NOT 120. "
+            "IMPORTANT (accountant-reviewed): Probation is 120 days. Note per Section 118 LPA: severance applies once employee completes 120 consecutive days — confirm or terminate before end of probation period if not extending. "
             "Day 120 triggers mandatory severance obligations under Section 17(3) of the Labour Protection Act B.E. 2541.", s))
         story.append(Spacer(1, 0.3*cm))
         for t in [
-            "3.1  The Employee shall serve a probation period of <b>one hundred and nineteen (119) days</b> from the Commencement Date.",
-            "3.2  During probation, either party may terminate with written notice equal to one (1) pay cycle or payment in lieu. If terminated before day 120, no severance is due.",
+            "3.1  The Employee shall serve a probation period of <b>one hundred and twenty (120) days</b> from the Commencement Date (Labour Protection Act B.E. 2541, Section 17).",
+            "3.2  During probation, either party may terminate by giving advance written notice of not less than one (1) pay cycle, or by payment in lieu, per Section 17(3) LPA. Severance under Section 118 applies only if the employee has completed 120 consecutive days of service.",
             "3.3  The Employer will evaluate performance before probation ends and will confirm employment, extend by written agreement, or terminate.",
             "3.4  Passing probation does not guarantee continued employment beyond the terms of this Agreement.",
         ]:
@@ -421,9 +421,9 @@ def build_ea_en(data):
         # 5 Working Hours
         story.append(sdiv()); story.append(Paragraph("5.  Working Hours", s['sec_head']))
         for t in [
-            "5.1  Normal working hours are <b>____</b> to <b>____</b>, not exceeding eight (8) hours per day and forty-eight (48) hours per week unless otherwise permitted by law.",
-            "5.2  Weekly day off: <b>__________________</b>",
-            "5.3  The Employee is entitled to a rest break of not less than one (1) hour after five (5) consecutive hours of work.",
+            "5.1  Normal working hours are <b>09:00 to 18:00, Monday to Saturday</b> (inclusive of a one-hour meal break), not exceeding eight (8) hours of actual work per day and forty-eight (48) hours per week, in accordance with the Labour Protection Act B.E. 2541.",
+            "5.2  The Employee is entitled to at least one (1) day off per week (LPA Section 28).",
+            "5.3  After five (5) consecutive working hours, the Employee shall receive a rest break of not less than one (1) hour (LPA Section 27).",
             "5.4  The Employer may adjust schedules with reasonable notice, provided total hours comply with law.",
         ]:
             story.append(Paragraph(t, s['body']))
@@ -443,12 +443,25 @@ def build_ea_en(data):
             "6.1  <b>Weekly rest day:</b> Not less than one (1) day per week in accordance with Thai labour law.",
             "6.2  <b>Public holidays:</b> Not less than thirteen (13) days per year as announced by the Employer.",
             "6.3  <b>Annual leave:</b> Not less than six (6) working days per year after one (1) year of service. Unused leave may be carried over or paid out per Employer policy.",
-            "6.4  <b>Sick leave:</b> Up to thirty (30) working days per year with pay. A medical certificate may be required for absences of three (3) or more consecutive days.",
-            "6.5  <b>Maternity leave:</b> Up to one hundred and twenty (120) days per pregnancy (including holidays), with pay for up to ninety-eight (98) days — Labour Protection Act B.E. 2541, Section 41 (as amended by LPA No. 9 B.E. 2568).",
+            "6.4  <b>Sick leave:</b> Up to thirty (30) working days per year with pay (LPA Section 32). A medical certificate may be required for three (3) or more consecutive sick days.",
+            "6.4a <b>Business leave:</b> At least three (3) working days per year with full pay for necessary personal business matters (LPA Section 34).",
+            "6.5  <b>Maternity leave:</b> Up to ninety-eight (98) days per pregnancy including holidays (LPA Section 41 as amended). The Employer pays wages for not more than forty-five (45) days; remaining days may be covered by the Social Security Fund.",
             "6.6  <b>Paternity leave:</b> Up to fifteen (15) working days with pay, within thirty (30) days of the child's birth — LPA Section 41/2 (as amended).",
             "6.7  <b>Other statutory leave:</b> As required by Thai labour law, including military service leave, sterilisation leave, and training leave.",
         ]:
             story.append(Paragraph(t, s['body']))
+
+        # ── Holiday-in-lieu arrangement (EN) ─────────────────────────────────────
+        story.append(Paragraph(
+            "6.5a  <b>Public / Traditional Holidays (13 days) — Compensatory Leave Arrangement.</b>  "
+            "The Employee is entitled to at least 13 traditional holidays per year (LPA Section 29). "
+            "In the villa hospitality industry, the Employee may be required to work on these days. In such cases: "
+            "(a) Normal-hours work on a public holiday is compensated at not less than double (2×) the daily rate (LPA Section 56); "
+            "(b) Overtime on a public holiday is compensated at not less than three (3×) the hourly rate; "
+            "(c) Each public holiday worked accumulates as one (1) day of compensatory leave, to be taken within the same calendar year at a time agreed by both parties; "
+            "(d) Compensatory leave (up to 13 days) + annual leave (6 days) = flexible leave pool of up to <b>19 days per year</b>; "
+            "(e) Leave schedule requires at least 7 days advance notice, subject to operational needs.",
+            s['body']))
 
         # 7 Confidentiality
         story.append(sdiv()); story.append(Paragraph("7.  Confidentiality and Data Protection", s['sec_head']))
@@ -620,11 +633,11 @@ def build_ea_th(data):
         story.append(Paragraph("2.2  สัญญานี้เป็น:  ☐  ไม่กำหนดระยะเวลา   ☐  กำหนดระยะเวลา สิ้นสุดวันที่: __________", s['body']))
 
         story.append(sdiv()); story.append(Paragraph("3.  ระยะเวลาทดลองงาน", s['sec_head']))
-        story.append(navy_box("อ้างอิง: ระยะทดลองงาน <b>119 วัน</b> (ไม่ใช่ 120 วัน) — วันที่ 120 จะก่อให้เกิดภาระค่าชดเชยตามมาตรา 17(3) แห่งพระราชบัญญัติคุ้มครองแรงงาน", s))
+        story.append(navy_box("อ้างอิงกฎหมาย (ผ่านการตรวจสอบโดยนักบัญชี): ระยะทดลองงาน <b>120 วัน</b> ตามมาตรา 17(3) LPA — สิทธิ์ค่าชดเชยตามมาตรา 118 เกิดขึ้นเมื่อทำงานครบ 120 วันติดต่อกัน", s))
         story.append(Spacer(1, 0.3*cm))
         for t in [
-            "3.1  ลูกจ้างอยู่ในระยะทดลองงานเป็นเวลา <b>หนึ่งร้อยสิบเก้า (119) วัน</b> นับจากวันที่เริ่มงาน",
-            "3.2  ในระหว่างทดลองงาน คู่สัญญาฝ่ายใดฝ่ายหนึ่งสามารถบอกเลิกสัญญาได้โดยแจ้งล่วงหน้าหนึ่งรอบการจ่ายค่าจ้าง หากบอกเลิกก่อนวันที่ 120 ลูกจ้างไม่มีสิทธิได้รับค่าชดเชย",
+            "3.1  ลูกจ้างอยู่ในระยะทดลองงานเป็นเวลา <b>หนึ่งร้อยยี่สิบ (120) วัน</b> นับจากวันที่เริ่มงาน ตามมาตรา 17 แห่ง พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541",
+            "3.2  ในระหว่างทดลองงาน คู่สัญญาฝ่ายใดฝ่ายหนึ่งสามารถบอกเลิกสัญญาได้ตามมาตรา 17(3) โดยแจ้งล่วงหน้าไม่น้อยกว่าหนึ่งรอบการจ่ายค่าจ้าง หรือชำระค่าจ้างแทนการบอกกล่าว ลูกจ้างมีสิทธิ์ค่าชดเชยตามมาตรา 118 เมื่อทำงานครบ 120 วันติดต่อกัน",
             "3.3  นายจ้างจะประเมินผลก่อนสิ้นสุดระยะทดลองงาน และจะยืนยัน ขยาย หรือสิ้นสุดการจ้างงาน",
         ]:
             story.append(Paragraph(t, s['body']))
@@ -682,9 +695,9 @@ def build_ea_th(data):
 
         story.append(sdiv()); story.append(Paragraph("5.  ชั่วโมงทำงาน", s['sec_head']))
         for t in [
-            "5.1  ชั่วโมงทำงานปกติไม่เกิน 8 ชั่วโมงต่อวัน และไม่เกิน 48 ชั่วโมงต่อสัปดาห์",
-            "5.2  วันหยุดประจำสัปดาห์: __________________",
-            "5.3  ลูกจ้างมีสิทธิพักไม่น้อยกว่า 1 ชั่วโมง หลังจากทำงานต่อเนื่อง 5 ชั่วโมง",
+            "5.1  ชั่วโมงทำงานปกติ: วันจันทร์ถึงวันเสาร์ เวลา 09:00–18:00 น. (รวมเวลาพัก 1 ชั่วโมง) ไม่เกิน 8 ชั่วโมงต่อวัน และไม่เกิน 48 ชั่วโมงต่อสัปดาห์ ตาม พ.ร.บ. คุ้มครองแรงงาน พ.ศ. 2541",
+            "5.2  ลูกจ้างมีสิทธิหยุดพักประจำสัปดาห์ไม่น้อยกว่าสัปดาห์ละ 1 วัน (มาตรา 28 LPA)",
+            "5.3  หลังจากทำงานต่อเนื่อง 5 ชั่วโมง ลูกจ้างมีสิทธิพักไม่น้อยกว่า 1 ชั่วโมง (มาตรา 27 LPA)",
         ]:
             story.append(Paragraph(t, s['body']))
 
@@ -693,17 +706,30 @@ def build_ea_th(data):
             "6.1  <b>วันหยุดประจำสัปดาห์:</b> ไม่น้อยกว่าหนึ่ง (1) วันต่อสัปดาห์",
             "6.2  <b>วันหยุดตามประเพณี:</b> ไม่น้อยกว่าสิบสาม (13) วันต่อปีตามที่นายจ้างประกาศ",
             "6.3  <b>วันลาพักร้อน:</b> ไม่น้อยกว่าหก (6) วันทำการต่อปี หลังครบหนึ่ง (1) ปีการทำงาน",
-            "6.4  <b>วันลาป่วย:</b> สูงสุดสามสิบ (30) วันทำการต่อปีโดยได้รับค่าจ้าง",
-            "6.5  <b>วันลาคลอด:</b> สูงสุด 120 วัน โดยได้รับค่าจ้างไม่เกิน 98 วัน (มาตรา 41 LPA)",
+            "6.4  <b>วันลาป่วย:</b> สูงสุดสามสิบ (30) วันทำการต่อปีโดยได้รับค่าจ้าง (มาตรา 32 LPA) — ขาดงาน 3 วันขึ้นไปติดต่อกัน อาจต้องแสดงใบรับรองแพทย์",
+            "6.4ก <b>วันลากิจ:</b> ไม่น้อยกว่า 3 วันทำการต่อปีโดยได้รับค่าจ้างเต็ม สำหรับกิจธุระจำเป็น (มาตรา 34 LPA)",
+            "6.5  <b>วันลาคลอด:</b> สูงสุด 98 วัน ต่อการตั้งครรภ์ รวมวันหยุด (มาตรา 41 LPA) นายจ้างจ่ายค่าจ้างไม่เกิน 45 วัน ส่วนที่เหลืออาจได้รับจากกองทุนประกันสังคม",
             "6.6  <b>วันลาของบิดา:</b> สูงสุด 15 วันทำการโดยได้รับค่าจ้าง (มาตรา 41/2 LPA แก้ไขเพิ่มเติม)",
         ]:
             story.append(Paragraph(t, s['body']))
+
+        # ── Holiday-in-lieu arrangement (TH) ─────────────────────────────────────
+        story.append(Paragraph(
+            "6.5ก  <b>วันหยุดตามประเพณี (13 วัน) — การสะสมวันลาทดแทน.</b>  "
+            "ลูกจ้างมีสิทธิ์วันหยุดตามประเพณีไม่น้อยกว่า 13 วันต่อปี (มาตรา 29 LPA) "
+            "เนื่องจากลักษณะงานบริการวิลล่า ลูกจ้างอาจต้องทำงานในวันดังกล่าว: "
+            "(ก) ชั่วโมงปกติในวันหยุดตามประเพณี — ได้รับไม่น้อยกว่าสองเท่า (2×) (มาตรา 56 LPA); "
+            "(ข) ล่วงเวลาในวันหยุด — ได้รับไม่น้อยกว่าสามเท่า (3×); "
+            "(ค) วันหยุดที่ทำงานสะสมเป็นวันลาชดเชย 1 วัน ต้องใช้ภายในปีเดียวกัน; "
+            "(ง) วันลาชดเชย + วันลาพักร้อน 6 วัน = วันลาสะสมสูงสุด <b>19 วันต่อปี</b>; "
+            "(จ) แจ้งล่วงหน้าไม่น้อยกว่า 7 วัน",
+            s['body']))
 
         story.append(sdiv()); story.append(Paragraph("7.  การรักษาความลับและการคุ้มครองข้อมูล", s['sec_head']))
         story.append(Paragraph("7.1  <b>นิยาม.</b>  \"ข้อมูลความลับ\" หมายถึงข้อมูลที่ไม่เปิดเผยทั้งหมดของนายจ้าง รวมถึงข้อมูลเจ้าของทรัพย์สิน ข้อมูลแขก กลยุทธ์ราคา ระบบปฏิบัติการ และโครงสร้างค่านายหน้า", s['body']))
         story.append(Paragraph("7.2  <b>พันธะหน้าที่.</b>  ลูกจ้างต้องเก็บรักษาข้อมูลความลับ ไม่เปิดเผยต่อบุคคลภายนอก และไม่นำไปใช้นอกเหนือจากการปฏิบัติหน้าที่", s['body']))
         story.append(Paragraph("7.3  <b>ผลบังคับภายหลัง.</b>  พันธะหน้าที่นี้ยังคงมีผลบังคับใช้หลังสิ้นสุดสัญญาจ้างงาน", s['body']))
-        story.append(Paragraph("7.4  <b>PDPA.</b>  ลูกจ้างต้องปฏิบัติตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562", s['body']))
+        story.append(Paragraph("7.4  <b>PDPA.</b>  ลูกจ้างต้องปฏิบัติตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 อย่างเคร่งครัด ห้ามเก็บรวบรวม ใช้ หรือเปิดเผยข้อมูลส่วนบุคคลของแขก เจ้าของทรัพย์สิน หรือบุคคลที่สาม เว้นแต่ในขอบเขตหน้าที่ การฝ่าฝืนถือเป็นความผิดทางวินัยร้ายแรง", s['body']))
 
         story.append(sdiv()); story.append(Paragraph("8.  ข้อห้ามการชักชวนและการแข่งขัน", s['sec_head']))
         story.append(Paragraph(
@@ -731,17 +757,24 @@ def build_ea_th(data):
 
         story.append(sdiv()); story.append(Paragraph("11.  การสิ้นสุดสัญญา", s['sec_head']))
         for t in [
-            "11.1  คู่สัญญาฝ่ายใดฝ่ายหนึ่งสามารถบอกเลิกสัญญาได้โดยแจ้งล่วงหน้าอย่างน้อย 30 วัน",
-            "11.2  เมื่อสิ้นสุดสัญญา นายจ้างต้องจ่ายค่าจ้างคงค้าง วันลาสะสม และค่าชดเชยตามกฎหมายภายใน 3 วัน",
+            "11.1  คู่สัญญาฝ่ายใดฝ่ายหนึ่งสามารถบอกเลิกสัญญาได้โดยแจ้งล่วงหน้าเป็นลายลักษณ์อักษรไม่น้อยกว่า 30 วัน หรือไม่น้อยกว่าหนึ่งรอบการจ่ายค่าจ้าง แล้วแต่กรณีใดจะนานกว่า นายจ้างอาจชำระค่าจ้างแทนการบอกกล่าว",
+            "11.2  เมื่อสิ้นสุดสัญญา นายจ้างต้องชำระภายใน 3 วัน ได้แก่: (ก) ค่าจ้างคงค้างถึงวันสุดท้าย; (ข) วันลาพักร้อนสะสมที่ยังไม่ได้ใช้; (ค) ค่าชดเชยตามมาตรา 118 หากมีสิทธิ์; (ง) เงินอื่นที่กฎหมายกำหนด",
             "11.3  ข้อ 7, 8 และ 9 ยังคงมีผลบังคับใช้หลังสิ้นสุดสัญญา",
         ]:
             story.append(Paragraph(t, s['body']))
 
         story.append(sdiv()); story.append(Paragraph("12.  กระบวนการทางวินัย", s['sec_head']))
-        story.append(Paragraph("ใช้กระบวนการทางวินัยแบบขั้นตอน: ตักเตือนด้วยวาจา → ตักเตือนเป็นลายลักษณ์อักษร → ตักเตือนครั้งสุดท้ายหรือเลิกจ้าง สำหรับการกระทำผิดร้ายแรง นายจ้างอาจเลิกจ้างทันที", s['body']))
+        story.append(Paragraph("นายจ้างจะดำเนินกระบวนการทางวินัยตามขั้นตอนดังต่อไปนี้:", s['body']))
+        for _t in [
+            "12.1  <b>ขั้นที่ 1 ตักเตือนด้วยวาจา:</b> กระทำผิดครั้งแรก นายจ้างตักเตือนด้วยวาจาและบันทึกไว้",
+            "12.2  <b>ขั้นที่ 2 ตักเตือนเป็นลายลักษณ์อักษร:</b> กระทำผิดซ้ำ นายจ้างออกหนังสือเตือนอย่างเป็นทางการ มีผล 12 เดือน",
+            "12.3  <b>ขั้นที่ 3 เลิกจ้าง:</b> กระทำผิดซ้ำภายในระยะเวลาที่กำหนด นายจ้างอาจเลิกจ้างตามกฎหมาย",
+            "12.4  <b>การกระทำผิดร้ายแรง:</b> ทุจริต ละทิ้งหน้าที่ ความรุนแรง หรือฝ่าฝืนกฎระเบียบอย่างจงใจ — นายจ้างเลิกจ้างทันทีโดยไม่จ่ายค่าชดเชยตามมาตรา 119 LPA",
+        ]:
+            story.append(Paragraph(_t, s['body']))
 
         story.append(sdiv()); story.append(Paragraph("13.  กฎหมายที่ใช้บังคับและการระงับข้อพิพาท", s['sec_head']))
-        story.append(Paragraph("สัญญานี้อยู่ภายใต้กฎหมายแห่งราชอาณาจักรไทย ข้อพิพาทอยู่ภายใต้เขตอำนาจศาลแรงงานไทย ในกรณีขัดแย้งระหว่างฉบับภาษาไทยและภาษาอังกฤษ ให้ฉบับภาษาอังกฤษมีผลบังคับใช้", s['body']))
+        story.append(Paragraph("สัญญานี้อยู่ภายใต้กฎหมายแห่งราชอาณาจักรไทย ข้อพิพาทอยู่ภายใต้เขตอำนาจของศาลแรงงานไทย ในกรณีที่ฉบับภาษาไทยและภาษาอังกฤษขัดแย้งกัน ให้ใช้ฉบับภาษาไทยเป็นหลักในการตีความตามกฎหมายแรงงานไทย", s['body']))
 
         story.append(sdiv()); story.append(Paragraph("14.  บทบัญญัติทั่วไป", s['sec_head']))
         story.append(Paragraph(
@@ -892,10 +925,21 @@ def build_ea_my(data):
             "၆.၂  <b>ရိုးရာပွဲတော်ရက် :</b> နှစ်တိုင်း ၁၃ ရက် (အလုပ်ရှင်မှ ကြေညာ)",
             "၆.၃  <b>နှစ်ချုပ်ရပ်ခွင့် :</b> ၁ နှစ်ပြည့်ပြီးနောက် နှစ်တိုင်း ၆ ရက်",
             "၆.၄  <b>နာမကျန်းခွင့် :</b> နှစ်တိုင်း လစာဖြင့် ၃၀ ရက်",
-            "၆.၅  <b>မိခင်ခွင့် :</b> ကိုယ်ဝန်တစ်ခုအတွက် ၁၂၀ ရက်၊ လစာဖြင့် ၉၈ ရက်",
+            "၆.၅  <b>မိခင်ခွင့် :</b> ကိုယ်ဝန်တစ်ခုအတွက် ၉၈ ရက် (LPA ပုဒ်မ 41) — အလုပ်ရှင် ၄၅ ရက် လစာပေးရ၊ ကျန်ရက်မျာ ပြည်သူ့ကျန်းမာရေးရန်ပုံငွေမှ ရနိုင်",
             "၆.၆  <b>ဖခင်ခွင့် :</b> ကလေးမွေးသောနေ့မှ ၃၀ ရက်အတွင်း ၁၅ ရက် (LPA ပုဒ်မ ၄၁/၂)",
         ]:
             story.append(Paragraph(t, s['body']))
+
+        # ── Holiday-in-lieu (MY) ─────────────────────────────────────────────────
+        story.append(Paragraph(
+            "၆.၅က  <b>ရိုးရာနေ့ကောင်း (၁၃ ရက်) — ခွင့်ရက် အစားထိုး သဘောတူ.</b>  "
+            "ဝန်ထမ်းသည် တစ်နှစ်တွင် ရိုးရာနေ့ကောင်း ၁၃ ရက် ရပိုင်ခွင့်ရှိ (LPA ပုဒ်မ 29)။ "
+            "Villa ဝန်ဆောင်မှုအတွက် ဧည့်သည်ရှိချိန် အလုပ်ဆင်းရနိုင်သည် — "
+            "(က) ပုံမှန်နာရီ ဆင်းပါက နှစ်ဆ (2×) (LPA ပုဒ်မ 56); "
+            "(ခ) အချိန်ပိုဆင်းပါက သုံးဆ (3×); "
+            "(ဂ) ဆင်းသောနေ့တိုင်း ခွင့် ၁ ရက် စုဆောင်းနိုင် — ထိုနှစ်အတွင်းသာ ယူနိုင်; "
+            "(ဃ) ရိုးရာနေ့ ၁၃ ရက် + နှစ်စဉ်ခွင့် ၆ ရက် = <b>နှစ်စဉ် ၁၉ ရက်</b> ပြောင်းလွယ်ခွင့်ထုပ်",
+            s['body']))
 
         story.append(sdiv()); story.append(Paragraph("၇.  ဝန်ထမ်း၏ တာဝန်ဝတ္တရားများ / စည်းကမ်း", s['sec_head']))
         for t in [
@@ -1086,278 +1130,302 @@ def build_annex_a(data, lang):
 
 # ─── ANNEX B — PERFORMANCE BONUS ──────────────────────────────
 def build_annex_b(data, lang):
-    emp = data.get('employee', {})
-    fname = emp.get('fullName', '__________')
-    dept_raw = data.get('department', 'housekeeping')
+    emp         = data.get('employee', {})
+    fname       = emp.get('fullName', '__________')
+    dept_raw    = data.get('department', 'housekeeping')
+    bonus_pool  = emp.get('bonusPoolAmount', '')
+    penalty_cap = emp.get('penaltyCapAmount', '')
+    eom_reward  = emp.get('eomRewardAmount', '')
 
-    titles = {'en':'Annex B — Performance Bonus & Incentive Schedule','th':'ภาคผนวก ข — ตารางโบนัสและสิ่งจูงใจ','my':'နောက်ဆက်တွဲ ခ — ကျွမ်းကျင်မှုဆု & မောင်းနှင်မှုဇယား'}
-    title = titles.get(lang, titles['en'])
+    def fmt_thb(v, fallback='THB __________'):
+        return f'THB {int(v):,}' if v else fallback
+    def fmt_pen(v, fallback='THB ______'):
+        return f'THB {int(v):,}' if v else fallback
+
+    titles = {
+        'en': 'Annex B — Performance Bonus & Incentive Schedule',
+        'th': 'ภาคผนวก ข — ตารางโบนัสและสิ่งจูงใจ',
+        'my': 'နောက်ဆက်တွဲ ခ — ကျွမ်းကျင်မှုဆု & မောင်းနှင်မှုဇယား',
+    }
+
+    NAVY  = (0.11, 0.14, 0.25)
+    WHITE = (1, 1, 1)
+
+    def score_tbl(rows, s):
+        t = Table(rows, colWidths=[CW*0.22, CW*0.52, CW*0.22])
+        t.setStyle(TableStyle([
+            ('BACKGROUND',(0,0),(-1,0),NAVY), ('TEXTCOLOR',(0,0),(-1,0),WHITE),
+            ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white, colors.HexColor('#F5F0E8')]),
+            ('BOX',(0,0),(-1,-1),1,colors.HexColor('#1C2340')),
+            ('INNERGRID',(0,0),(-1,-1),0.5,colors.HexColor('#D4CCBC')),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('TOPPADDING',(0,0),(-1,-1),5), ('BOTTOMPADDING',(0,0),(-1,-1),5),
+        ]))
+        return t
+
+    def pen_tbl(rows, s):
+        t = Table(rows, colWidths=[CW*0.62, CW*0.34])
+        t.setStyle(TableStyle([
+            ('BACKGROUND',(0,0),(-1,0),NAVY), ('TEXTCOLOR',(0,0),(-1,0),WHITE),
+            ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white, colors.HexColor('#F5F0E8')]),
+            ('BOX',(0,0),(-1,-1),1,colors.HexColor('#1C2340')),
+            ('INNERGRID',(0,0),(-1,-1),0.5,colors.HexColor('#D4CCBC')),
+            ('VALIGN',(0,0),(-1,-1),'TOP'),
+            ('TOPPADDING',(0,0),(-1,-1),5), ('BOTTOMPADDING',(0,0),(-1,-1),5),
+        ]))
+        return t
 
     def content(s):
         story = []
         story.append(cover_logo()); story.append(Spacer(1, 0.4*cm))
-        story.append(Paragraph(title, s['doc_title']))
-        story.append(Paragraph("Mister Property Siam Co.,LTD — " + ("Confidential" if lang=='en' else ("ลับ" if lang=='th' else "လျှို့ဝှက်")), s['doc_sub']))
+        story.append(Paragraph(titles[lang], s['doc_title']))
+        story.append(Paragraph("Mister Property Siam Co.,LTD  |  Tax ID: 0845566025288", s['doc_sub']))
         story.append(hr())
-        story.append(info_table([("Employee / ชื่อ / အမည်", fname)], s)); story.append(Spacer(1, 0.4*cm))
+        story.append(info_table([
+            ("Employee / ชื่อ / အမည်", fname),
+            ("Department", {"housekeeping":"Housekeeping","office":"Office / Management","pool":"Pool, Garden & Handyman"}.get(dept_raw, dept_raw.title())),
+        ], s)); story.append(Spacer(1, 0.4*cm))
 
         if lang == 'en':
-            story.append(Paragraph("1.  Performance Bonus — Biannual Assessment", s['sec_head']))
-            story.append(cream_box("Performance bonuses and penalties are assessed every six (6) months. Penalties are deducted from the bonus pool only — NEVER from the base salary.", s))
-            story.append(Spacer(1, 0.3*cm))
+            story.append(Paragraph("1.  Structure & Eligibility", s['sec_head']))
+            story.append(cream_box("Bonuses and penalties are assessed every six (6) months. Penalties are deducted from the bonus pool ONLY — never from base salary (LPA Section 76 B.E. 2541).", s))
             for t in [
-                "1.1  Bonus Period: January–June (paid in July) and July–December (paid in January of the following year).",
-                "1.2  Bonus Eligibility: Employee must have completed probation and been in active service for at least three (3) full months of the bonus period.",
-                "1.3  Maximum Bonus Pool: <b>THB __________</b> per period (to be agreed in writing at the start of each period).",
-                "1.4  Performance Criteria: Guest review scores, cleaning standard scores, punctuality, attendance, and Employer assessment.",
+                "1.1  Assessment periods: January–June (paid July) and July–December (paid January of the following year).",
+                "1.2  Eligibility: probation must be completed; employee must have served at least 3 full months of the period.",
+                f"1.3  Maximum bonus pool: <b>{fmt_thb(bonus_pool)}</b> per period — confirmed in writing at period start.",
+                "1.4  Bonuses are pro-rated for periods of less than six (6) months.",
             ]:
                 story.append(Paragraph(t, s['body']))
 
             if dept_raw == 'housekeeping':
-                story.append(Paragraph("2.  Housekeeping — Target Cleaning Scores", s['sec_head']))
-                data_rows = [
-                    [Paragraph("Score Band", s['tbl_hdr']), Paragraph("Guest Review Rating", s['tbl_hdr']), Paragraph("Bonus %", s['tbl_hdr'])],
-                    [Paragraph("Excellent", s['tbl_cell']), Paragraph("4.8 – 5.0 stars", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
-                    [Paragraph("Good", s['tbl_cell']), Paragraph("4.5 – 4.79 stars", s['tbl_cell']), Paragraph("70%", s['tbl_cell'])],
-                    [Paragraph("Satisfactory", s['tbl_cell']), Paragraph("4.0 – 4.49 stars", s['tbl_cell']), Paragraph("40%", s['tbl_cell'])],
-                    [Paragraph("Below Standard", s['tbl_cell']), Paragraph("Below 4.0 stars", s['tbl_cell']), Paragraph("0%", s['tbl_cell'])],
-                ]
-                t = Table(data_rows, colWidths=[CW*0.25, CW*0.45, CW*0.25])
-                t.setStyle(TableStyle([
-                    ('BACKGROUND',(0,0),(-1,0),NAVY),('TEXTCOLOR',(0,0),(-1,0),WHITE),
-                    ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white, CREAM]),
-                    ('BOX',(0,0),(-1,-1),1,NAVY),('INNERGRID',(0,0),(-1,-1),0.5,GREY_LT),
-                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),6),
-                ]))
-                story.append(t); story.append(Spacer(1, 0.3*cm))
+                story.append(Paragraph("2.  Housekeeping — Performance Score Tiers", s['sec_head']))
+                story.append(Paragraph("Average guest cleanliness score across all assigned villas, weighted by number of stays.", s['body']))
+                story.append(Spacer(1, 0.15*cm))
+                story.append(score_tbl([
+                    [Paragraph("<b>Band</b>", s['tbl_hdr']), Paragraph("<b>Avg. Cleanliness Score</b>", s['tbl_hdr']), Paragraph("<b>Bonus %</b>", s['tbl_hdr'])],
+                    [Paragraph("Excellent",      s['tbl_cell']), Paragraph("4.8 – 5.0 stars",  s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("Good",           s['tbl_cell']), Paragraph("4.5 – 4.79 stars", s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("Satisfactory",   s['tbl_cell']), Paragraph("4.0 – 4.49 stars", s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("Below Standard", s['tbl_cell']), Paragraph("Below 4.0 stars",  s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.2*cm))
+                story.append(Paragraph("2.1  Adjustments: punctuality (zero late arrivals +0.1), full attendance +0.1, documented linen complaints −0.1 each.", s['body']))
+                story.append(Paragraph("3.  Penalty Provisions — Housekeeping", s['sec_head']))
+                story.append(navy_box("Deducted from bonus pool only. Base salary is protected (LPA Section 76).", s))
+                story.append(Spacer(1, 0.1*cm))
+                story.append(pen_tbl([
+                    [Paragraph("<b>Event</b>", s['tbl_hdr']), Paragraph("<b>Deduction</b>", s['tbl_hdr'])],
+                    [Paragraph("Negative guest review from cleaning negligence", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Villa property damage due to negligence", s['tbl_cell']), Paragraph("Documented repair / replacement cost", s['tbl_cell'])],
+                    [Paragraph("Repeated standard failures (3+ documented/period)", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Unauthorised absence during confirmed guest stay", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Guest item missing and attributed to housekeeping", s['tbl_cell']), Paragraph("Documented value (with investigation)", s['tbl_cell'])],
+                ], s))
 
-            story.append(Paragraph("3.  Penalty Provisions", s['sec_head']))
-            story.append(navy_box("Penalties are deducted from the bonus pool ONLY. Base salary cannot be reduced by penalties per Thai Labour Protection Act Section 76.", s))
-            story.append(Spacer(1, 0.3*cm))
-            penalty_rows = [
-                [Paragraph("Event", s['tbl_hdr']), Paragraph("Deduction from Bonus Pool", s['tbl_hdr'])],
-                [Paragraph("Negative guest review directly attributable to Employee negligence", s['tbl_cell']), Paragraph("Up to THB ______", s['tbl_cell'])],
-                [Paragraph("Damage to villa property due to Employee negligence", s['tbl_cell']), Paragraph("Replacement / repair cost (documented)", s['tbl_cell'])],
-                [Paragraph("Repeated cleaning standard failures (documented)", s['tbl_cell']), Paragraph("Up to THB ______", s['tbl_cell'])],
-                [Paragraph("Unauthorised absence during guest stay", s['tbl_cell']), Paragraph("Up to THB ______", s['tbl_cell'])],
-            ]
-            t = Table(penalty_rows, colWidths=[CW*0.60, CW*0.35])
-            t.setStyle(TableStyle([
-                ('BACKGROUND',(0,0),(-1,0),NAVY),('TEXTCOLOR',(0,0),(-1,0),WHITE),
-                ('ROWBACKGROUNDS',(0,1),(-1,-1),[colors.white, CREAM]),
-                ('BOX',(0,0),(-1,-1),1,NAVY),('INNERGRID',(0,0),(-1,-1),0.5,GREY_LT),
-                ('VALIGN',(0,0),(-1,-1),'TOP'),('TOPPADDING',(0,0),(-1,-1),6),('BOTTOMPADDING',(0,0),(-1,-1),6),
-            ]))
-            story.append(t); story.append(Spacer(1, 0.3*cm))
+            elif dept_raw == 'pool':
+                story.append(Paragraph("2.  Pool, Garden & Handyman — Performance Score Tiers", s['sec_head']))
+                story.append(Paragraph("Score: maintenance round completion rate (60%) + guest outdoor satisfaction (30%) + zero critical failures (10%).", s['body']))
+                story.append(Spacer(1, 0.15*cm))
+                story.append(score_tbl([
+                    [Paragraph("<b>Band</b>", s['tbl_hdr']), Paragraph("<b>Criteria</b>", s['tbl_hdr']), Paragraph("<b>Bonus %</b>", s['tbl_hdr'])],
+                    [Paragraph("Excellent",      s['tbl_cell']), Paragraph("≥95% rounds + outdoor score ≥4.8 + zero critical failures", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("Good",           s['tbl_cell']), Paragraph("≥85% rounds + outdoor score ≥4.5",                         s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("Satisfactory",   s['tbl_cell']), Paragraph("≥75% rounds + outdoor score ≥4.0",                         s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("Below Standard", s['tbl_cell']), Paragraph("Below 75% rounds OR score below 4.0 OR critical failure",  s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.15*cm))
+                story.append(Paragraph("2.1  Critical failure = unchecked pool chemical imbalance during guest stay, or safety hazard not reported within 2 hours.", s['body']))
+                story.append(Paragraph("3.  Penalty Provisions — Pool, Garden & Handyman", s['sec_head']))
+                story.append(navy_box("Deducted from bonus pool only. Base salary is protected.", s))
+                story.append(Spacer(1, 0.1*cm))
+                story.append(pen_tbl([
+                    [Paragraph("<b>Event</b>", s['tbl_hdr']), Paragraph("<b>Deduction</b>", s['tbl_hdr'])],
+                    [Paragraph("Pool chemical failure during guest stay", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Missed scheduled maintenance round (per incident)", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Safety hazard unreported within 2 hours", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Property damage due to maintenance negligence", s['tbl_cell']), Paragraph("Documented cost", s['tbl_cell'])],
+                    [Paragraph("Urgent repair not responded within 4 hours (during guest stay)", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                ], s))
 
+            else:  # office
+                is_manager = bool(emp.get('managedProperties'))
+                story.append(Paragraph("2.  Office / Management — Performance Score Tiers", s['sec_head']))
+                story.append(Paragraph("Score: portfolio occupancy rate (40%) + owner satisfaction (30%) + on-time reporting (20%) + guest review (10%).", s['body']))
+                story.append(Spacer(1, 0.15*cm))
+                story.append(score_tbl([
+                    [Paragraph("<b>Band</b>", s['tbl_hdr']), Paragraph("<b>Criteria</b>", s['tbl_hdr']), Paragraph("<b>Bonus %</b>", s['tbl_hdr'])],
+                    [Paragraph("Excellent",      s['tbl_cell']), Paragraph("Occupancy ≥80% + owner score ≥4.8 + all reports on time",              s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("Good",           s['tbl_cell']), Paragraph("Occupancy ≥70% + owner score ≥4.5 + ≥90% reports on time",            s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("Satisfactory",   s['tbl_cell']), Paragraph("Occupancy ≥60% + owner score ≥4.0",                                    s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("Below Standard", s['tbl_cell']), Paragraph("Occupancy below 60% OR owner score below 4.0 OR 3+ late reports",      s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.15*cm))
+                if is_manager:
+                    story.append(Paragraph("2.1  Portfolio Manager — Additional Incentive: management commission per property is paid monthly (separate from bonus pool). Revenue growth ≥10% YoY: discretionary bonus of up to 50% of pool at Employer's discretion.", s['body']))
+                story.append(Paragraph("3.  Penalty Provisions — Office / Management", s['sec_head']))
+                story.append(navy_box("Deducted from bonus pool only. Base salary is protected.", s))
+                story.append(Spacer(1, 0.1*cm))
+                story.append(pen_tbl([
+                    [Paragraph("<b>Event</b>", s['tbl_hdr']), Paragraph("<b>Deduction</b>", s['tbl_hdr'])],
+                    [Paragraph("Monthly property report late or incomplete (per report)", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Documented owner complaint from management failure", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Guest complaint from booking error or access issue", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("OTA listing error causing lost or double-booking", s['tbl_cell']), Paragraph(f"Up to {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("Breach of owner or guest confidentiality", s['tbl_cell']), Paragraph("Up to full pool forfeiture", s['tbl_cell'])],
+                ], s))
+
+            # Employee of the Month (all depts)
             story.append(Paragraph("4.  Employee of the Month", s['sec_head']))
             for t in [
-                "4.1  MPS operates an Employee of the Month recognition program. Nominations are based on: (a) written commendations by guests in villa review books; (b) personal mentions in online reviews (Airbnb, Google, TripAdvisor); or (c) Employer nomination.",
-                "4.2  Reward: <b>THB __________</b> cash bonus (or equivalent benefit) plus a printed certificate of recognition displayed at the office.",
-                "4.3  Multiple nominations in the same period are cumulative. The recipient is announced on the first working day of the following month.",
-                "4.4  Any Employee subject to an active written warning is not eligible during that warning period.",
+                "4.1  Nominations based on: (a) written commendations in villa review books; (b) personal mentions in online reviews (Airbnb, Google, TripAdvisor); or (c) Employer nomination.",
+                f"4.2  Reward: <b>{fmt_thb(eom_reward)}</b> cash bonus plus a printed certificate.",
+                "4.3  Multiple nominations in one period carry additional weight.",
+                "4.4  Employees subject to an active written warning are not eligible.",
             ]:
                 story.append(Paragraph(t, s['body']))
+            story.append(Spacer(1, 0.4*cm))
+            story += sig_block(s, lang)
 
         elif lang == 'th':
-            story.append(Paragraph("1.  โบนัสตามผลการปฏิบัติงาน — ประเมินทุก 6 เดือน", s['sec_head']))
-            story.append(cream_box("โบนัสและบทลงโทษประเมินทุกหกเดือน บทลงโทษหักจากกองทุนโบนัสเท่านั้น — ห้ามหักจากค่าจ้างพื้นฐาน", s))
-            story.append(Spacer(1, 0.3*cm))
+            story.append(Paragraph("1.  โครงสร้างโบนัสและคุณสมบัติ", s['sec_head']))
+            story.append(cream_box("โบนัสและบทลงโทษประเมินทุก 6 เดือน บทลงโทษหักจากกองทุนโบนัสเท่านั้น ห้ามหักจากค่าจ้างพื้นฐาน (มาตรา 76 LPA)", s))
             for t in [
-                "1.1  รอบโบนัส: มกราคม–มิถุนายน (จ่ายในกรกฎาคม) และกรกฎาคม–ธันวาคม (จ่ายในมกราคมปีถัดไป)",
-                "1.2  คุณสมบัติ: ลูกจ้างต้องผ่านการทดลองงานและทำงานมาแล้วอย่างน้อย 3 เดือนเต็มในรอบโบนัส",
-                "1.3  กองทุนโบนัสสูงสุด: <b>THB __________</b> ต่อรอบ (ตกลงเป็นลายลักษณ์อักษรต้นรอบ)",
+                "1.1  รอบโบนัส: มกราคม–มิถุนายน (จ่ายกรกฎาคม) และกรกฎาคม–ธันวาคม (จ่ายมกราคมปีถัดไป)",
+                "1.2  คุณสมบัติ: ผ่านการทดลองงานและทำงานครบ 3 เดือนเต็มในรอบนั้น",
+                f"1.3  กองทุนโบนัสสูงสุด: <b>{fmt_thb(bonus_pool)}</b> ต่อรอบ",
             ]:
                 story.append(Paragraph(t, s['body']))
-            story.append(Paragraph("2.  บทลงโทษ (หักจากกองทุนโบนัสเท่านั้น)", s['sec_head']))
-            story.append(navy_box("บทลงโทษหักจากกองทุนโบนัสเท่านั้น ห้ามหักจากค่าจ้างพื้นฐาน (มาตรา 76 LPA)", s))
-            story.append(Spacer(1, 0.3*cm))
-            for t in [
-                "• รีวิวเชิงลบจากแขกที่มีสาเหตุจากการประมาทของลูกจ้าง: หักสูงสุด THB ______",
-                "• ความเสียหายต่อทรัพย์สินวิลล่าจากความประมาท: ค่าซ่อมแซม/ทดแทน (มีเอกสาร)",
-                "• ความล้มเหลวซ้ำในมาตรฐานการทำความสะอาด: หักสูงสุด THB ______",
-            ]:
-                story.append(Paragraph(t, s['bullet']))
-            story.append(Paragraph("3.  พนักงานดีเด่นประจำเดือน", s['sec_head']))
-            story.append(Paragraph("พนักงานที่ได้รับคำชมจากแขกในสมุดรีวิววิลล่าหรือในรีวิวออนไลน์ จะได้รับรางวัลพนักงานดีเด่น รางวัลคือ <b>THB __________</b> และใบประกาศเกียรติคุณ", s['body']))
+
+            if dept_raw == 'housekeeping':
+                story.append(Paragraph("2.  แม่บ้าน — ระดับคะแนนการทำความสะอาด", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>ระดับ</b>", s['tbl_hdr']), Paragraph("<b>คะแนนรีวิวแขก (เฉลี่ย)</b>", s['tbl_hdr']), Paragraph("<b>โบนัส %</b>", s['tbl_hdr'])],
+                    [Paragraph("ดีเยี่ยม",        s['tbl_cell']), Paragraph("4.8–5.0 ดาว",    s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ดี",              s['tbl_cell']), Paragraph("4.5–4.79 ดาว",   s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("พอใช้",           s['tbl_cell']), Paragraph("4.0–4.49 ดาว",   s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("ต่ำกว่ามาตรฐาน", s['tbl_cell']), Paragraph("ต่ำกว่า 4.0 ดาว", s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.2*cm))
+                story.append(Paragraph("3.  บทลงโทษ — แม่บ้าน", s['sec_head']))
+                story.append(navy_box("หักจากกองทุนโบนัสเท่านั้น ค่าจ้างพื้นฐานได้รับการคุ้มครอง", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>เหตุการณ์</b>", s['tbl_hdr']), Paragraph("<b>จำนวนหัก</b>", s['tbl_hdr'])],
+                    [Paragraph("รีวิวเชิงลบจากความประมาทของแม่บ้าน", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ความเสียหายต่อทรัพย์สินวิลล่า", s['tbl_cell']), Paragraph("ค่าซ่อมแซม/ทดแทน", s['tbl_cell'])],
+                    [Paragraph("ล้มเหลวในมาตรฐาน 3 ครั้งขึ้นไปในรอบเดียว", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ขาดงานระหว่างแขกเข้าพักโดยไม่ได้รับอนุญาต", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                ], s))
+            elif dept_raw == 'pool':
+                story.append(Paragraph("2.  สระน้ำ สวน ช่าง — ระดับการบำรุงรักษา", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>ระดับ</b>", s['tbl_hdr']), Paragraph("<b>เกณฑ์</b>", s['tbl_hdr']), Paragraph("<b>โบนัส %</b>", s['tbl_hdr'])],
+                    [Paragraph("ดีเยี่ยม",        s['tbl_cell']), Paragraph("รอบ ≥95% + คะแนนกลางแจ้ง ≥4.8 + ไม่มีความล้มเหลวร้ายแรง", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ดี",              s['tbl_cell']), Paragraph("รอบ ≥85% + คะแนนกลางแจ้ง ≥4.5", s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("พอใช้",           s['tbl_cell']), Paragraph("รอบ ≥75% + คะแนนกลางแจ้ง ≥4.0", s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("ต่ำกว่ามาตรฐาน", s['tbl_cell']), Paragraph("รอบ <75% หรือ คะแนน <4.0 หรือ ความล้มเหลวร้ายแรง", s['tbl_cell']), Paragraph("0%", s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.2*cm))
+                story.append(Paragraph("3.  บทลงโทษ — สระน้ำ สวน ช่าง", s['sec_head']))
+                story.append(navy_box("หักจากกองทุนโบนัสเท่านั้น ค่าจ้างพื้นฐานได้รับการคุ้มครอง", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>เหตุการณ์</b>", s['tbl_hdr']), Paragraph("<b>จำนวนหัก</b>", s['tbl_hdr'])],
+                    [Paragraph("ปัญหาสารเคมีสระขณะแขกพัก", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ข้ามรอบการบำรุงรักษาที่กำหนด (ต่อครั้ง)", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("อันตรายที่ไม่รายงานภายใน 2 ชั่วโมง", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ความเสียหายจากความประมาท", s['tbl_cell']), Paragraph("ค่าซ่อมแซม", s['tbl_cell'])],
+                ], s))
+            else:
+                story.append(Paragraph("2.  สำนักงาน / บริหาร — ระดับผลการปฏิบัติงาน", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>ระดับ</b>", s['tbl_hdr']), Paragraph("<b>เกณฑ์</b>", s['tbl_hdr']), Paragraph("<b>โบนัส %</b>", s['tbl_hdr'])],
+                    [Paragraph("ดีเยี่ยม",        s['tbl_cell']), Paragraph("เข้าพัก ≥80% + เจ้าของ ≥4.8 + รายงานตรงเวลาทั้งหมด", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ดี",              s['tbl_cell']), Paragraph("เข้าพัก ≥70% + เจ้าของ ≥4.5 + ≥90% ตรงเวลา",         s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("พอใช้",           s['tbl_cell']), Paragraph("เข้าพัก ≥60% + เจ้าของ ≥4.0",                         s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("ต่ำกว่ามาตรฐาน", s['tbl_cell']), Paragraph("เข้าพัก <60% หรือ เจ้าของ <4.0",                     s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.2*cm))
+                story.append(Paragraph("3.  บทลงโทษ — สำนักงาน / บริหาร", s['sec_head']))
+                story.append(navy_box("หักจากกองทุนโบนัสเท่านั้น ค่าจ้างพื้นฐานได้รับการคุ้มครอง", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>เหตุการณ์</b>", s['tbl_hdr']), Paragraph("<b>จำนวนหัก</b>", s['tbl_hdr'])],
+                    [Paragraph("รายงานทรัพย์สินล่าช้า/ไม่ครบ (ต่อฉบับ)", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ข้อร้องเรียนจากเจ้าของที่มีสาเหตุจากการบริหาร", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("ข้อผิดพลาดในการจองที่ทำให้สูญเสียรายได้", s['tbl_cell']), Paragraph(f"สูงสุด {fmt_pen(penalty_cap)}", s['tbl_cell'])],
+                    [Paragraph("การละเมิดความลับของเจ้าของหรือแขก", s['tbl_cell']), Paragraph("หักได้ถึงเต็มกองทุนโบนัส", s['tbl_cell'])],
+                ], s))
+
+            story.append(Paragraph("4.  พนักงานดีเด่นประจำเดือน", s['sec_head']))
+            story.append(Paragraph(
+                f"พนักงานที่ได้รับคำชมจากแขกในสมุดรีวิวหรือรีวิวออนไลน์ (Airbnb, Google) จะได้รับรางวัลพนักงานดีเด่น "
+                f"รางวัล: <b>{fmt_thb(eom_reward)}</b> + ใบประกาศเกียรติคุณ พนักงานที่มีใบเตือนที่ยังมีผลบังคับไม่มีสิทธิ์รับรางวัล",
+                s['body']))
+            story.append(Spacer(1, 0.4*cm))
+            story += sig_block(s, lang)
 
         else:  # my
-            story.append(Paragraph("၁.  ကျွမ်းကျင်မှုဆု — ၆ လ တစ်ကြိမ် စစ်ဆေးမှု", s['sec_head']))
-            story.append(cream_box("ကျွမ်းကျင်မှုဆုနှင့် ဒဏ်ကြေးကို ၆ လ တစ်ကြိမ် စစ်ဆေးသည်။ ဒဏ်ကြေးကို ဆုငွေထုပ်မှသာ နုတ်ရမည် — အခြေခံလစာမှ မနုတ်ရ။", s))
-            story.append(Spacer(1, 0.3*cm))
+            story.append(Paragraph("၁.  ဆုစနစ် အကျဉ်းချုပ်", s['sec_head']))
+            story.append(cream_box("ဆုနှင့် ဒဏ်ကြေးကို ၆ လ တစ်ကြိမ် စစ်ဆေးသည်။ ဒဏ်ကြေးကို ဆုငွေထုပ်မှသာ နုတ်ရမည် — အခြေခံလစာမှ မနုတ်ရ (LPA ပုဒ်မ 76)", s))
             for t in [
-                "၁.၁  ဆုကာလ : ဇန်နဝါရီ–ဇွန် (ဇူလိုင်တွင် ပေး) နှင့် ဇူလိုင်–ဒီဇင်ဘာ (နောက်နှစ် ဇန်နဝါရီတွင် ပေး)။",
-                "၁.၂  အနည်းဆုံး ဆုကာလ ၃ လ ပြည့်ပြီး တက်ကြွဆောင်ရွက်နေသော ဝန်ထမ်းများ ဆုခံစားခွင့်ရှိသည်။",
-                "၁.၃  ဆုငွေ အများဆုံး : <b>THB __________</b> ကာလတစ်ကြိမ်ထဲ (ကာလ ဦးပိုင်းတွင် ရေးဖြင့် သဘောတူရမည်)။",
+                "၁.၁  ဆုကာလ: ဇန်နဝါရီ–ဇွန် (ဇူလိုင်တွင် ပေး) နှင့် ဇူလိုင်–ဒီဇင်ဘာ (နောက်နှစ် ဇန်နဝါရီတွင် ပေး)",
+                f"၁.၂  ဆုငွေ အများဆုံး: <b>{fmt_thb(bonus_pool)}</b> — ကာလ ဦးပိုင်းတွင် ရေးဖြင့် သဘောတူရမည်",
             ]:
                 story.append(Paragraph(t, s['body']))
-            story.append(Paragraph("၂.  ဒဏ်ကြေး (ဆုငွေထုပ်မှသာ နုတ်ရမည်)", s['sec_head']))
-            story.append(navy_box("ဒဏ်ကြေးကို ဆုငွေထုပ်မှသာ နုတ်ရမည် — အခြေခံလစာမှ မနုတ်ရ (ပုဒ်မ ၇၆ LPA)", s))
-            story.append(Spacer(1, 0.3*cm))
-            for t in [
-                "• ဝန်ထမ်း ဂရုမစိုက်မှုကြောင့် ဧည့်သည် ဆိုးသောဝေဖန်ချက် : THB ______ အထိ နုတ်",
-                "• ဝန်ထမ်း ဂရုမစိုက်မှုကြောင့် ဗိလာပစ္စည်းပျက်စီးမှု : ပြုပြင်/အစားထိုးကုန်ကျ (မှတ်တမ်းတင်ထား)",
-                "• သန့်ရှင်းမှုစံနှုန်း ထပ်ခါတလဲ ကျဆင်းမှု : THB ______ အထိ နုတ်",
-            ]:
-                story.append(Paragraph(t, s['bullet']))
-            story.append(Paragraph("၃.  လတစ်လ အကောင်းဆုံးဝန်ထမ်း", s['sec_head']))
-            story.append(Paragraph("ဗိလာဘုတ်/အွန်လိုင်း ဝေဖန်ချက်တွင် ဧည့်သည်မှ ချီးကျူးခံရသောဝန်ထမ်းကို ဆုချီးမြင့်မည် — <b>THB __________</b> ငွေသားဆုနှင့် အောင်မြင်မှုလက်မှတ်", s['body']))
 
-        story += sig_block(s, lang)
+            if dept_raw == 'housekeeping':
+                story.append(Paragraph("၂.  Housekeeping — သန့်ရှင်းရေး ကျွမ်းကျင်မှုဇယား", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>အဆင့်</b>", s['tbl_hdr']), Paragraph("<b>ဧည့်သည် ရမှတ် (ပျမ်းမျှ)</b>", s['tbl_hdr']), Paragraph("<b>ဆု %</b>", s['tbl_hdr'])],
+                    [Paragraph("အထူးကောင်း", s['tbl_cell']), Paragraph("4.8–5.0 ကြယ်",    s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ကောင်း",      s['tbl_cell']), Paragraph("4.5–4.79 ကြယ်",  s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("လုံလောက်",    s['tbl_cell']), Paragraph("4.0–4.49 ကြယ်",  s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("စံနှုန်းအောက်", s['tbl_cell']), Paragraph("4.0 ကြယ်အောက်", s['tbl_cell']), Paragraph("0%",  s['tbl_cell'])],
+                ], s)); story.append(Spacer(1, 0.2*cm))
+                story.append(Paragraph("၃.  ဒဏ်ကြေး — Housekeeping", s['sec_head']))
+                story.append(navy_box("ဆုငွေထုပ်မှသာ နုတ်ရမည် — အခြေခံလစာ ကာကွယ်ထားသည်", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>အကြောင်း</b>", s['tbl_hdr']), Paragraph("<b>နုတ်ငွေ</b>", s['tbl_hdr'])],
+                    [Paragraph("ဂရုမစိုက်မှုကြောင့် ဧည့်သည် ဆိုးဝါးသောဝေဖန်ချက်", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                    [Paragraph("ဗိလာပစ္စည်းပျက်စီးမှု (ဂရုမစိုက်ခြင်းကြောင့်)", s['tbl_cell']), Paragraph("ပြုပြင်/အစားထိုးကုန်ကျ", s['tbl_cell'])],
+                    [Paragraph("ဧည့်သည်ရှိချိန် ခွင်မပြုဘဲ ခွင်ပျက်", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                ], s))
+            elif dept_raw == 'pool':
+                story.append(Paragraph("၂.  ကန်၊ ဥယျာဉ်၊ ဆင်ခြေ — ထိန်းသိမ်းမှုဇယား", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>အဆင့်</b>", s['tbl_hdr']), Paragraph("<b>သတ်မှတ်ချက်</b>", s['tbl_hdr']), Paragraph("<b>ဆု %</b>", s['tbl_hdr'])],
+                    [Paragraph("အထူးကောင်း", s['tbl_cell']), Paragraph("≥95% + ပြင်ပ ≥4.8 + ချွတ်ယွင်းမှုမရှိ", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ကောင်း",      s['tbl_cell']), Paragraph("≥85% + ပြင်ပ ≥4.5", s['tbl_cell']), Paragraph("70%", s['tbl_cell'])],
+                    [Paragraph("လုံလောက်",    s['tbl_cell']), Paragraph("≥75% + ပြင်ပ ≥4.0", s['tbl_cell']), Paragraph("40%", s['tbl_cell'])],
+                    [Paragraph("စံနှုန်းအောက်", s['tbl_cell']), Paragraph("<75% သို့မဟုတ် ချွတ်ယွင်းမှုကြီး", s['tbl_cell']), Paragraph("0%", s['tbl_cell'])],
+                ], s))
+                story.append(Paragraph("၃.  ဒဏ်ကြေး — ကန်၊ ဥယျာဉ်၊ ဆင်ခြေ", s['sec_head']))
+                story.append(navy_box("ဆုငွေထုပ်မှသာ နုတ်ရမည်", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>အကြောင်း</b>", s['tbl_hdr']), Paragraph("<b>နုတ်ငွေ</b>", s['tbl_hdr'])],
+                    [Paragraph("ဧည့်သည်ရှိချိန် ရေကန်ဓာတုပြဿနာ", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                    [Paragraph("သတ်မှတ်ထိန်းသိမ်းမှုကာလ ကျော်လွန်", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                    [Paragraph("ဂရုမစိုက်မှုကြောင့် ပစ္စည်းပျက်စီး", s['tbl_cell']), Paragraph("ပြုပြင်ကုန်ကျ", s['tbl_cell'])],
+                ], s))
+            else:
+                story.append(Paragraph("၂.  ရုံးစီမံ / Villa Manager — ကျွမ်းကျင်မှုဇယား", s['sec_head']))
+                story.append(score_tbl([
+                    [Paragraph("<b>အဆင့်</b>", s['tbl_hdr']), Paragraph("<b>သတ်မှတ်ချက်</b>", s['tbl_hdr']), Paragraph("<b>ဆု %</b>", s['tbl_hdr'])],
+                    [Paragraph("အထူးကောင်း", s['tbl_cell']), Paragraph("Occupancy ≥80% + ပိုင်ရှင် ≥4.8 + report အချိန်မီ", s['tbl_cell']), Paragraph("100%", s['tbl_cell'])],
+                    [Paragraph("ကောင်း",      s['tbl_cell']), Paragraph("Occupancy ≥70% + ပိုင်ရှင် ≥4.5 + ≥90% မီ",       s['tbl_cell']), Paragraph("70%",  s['tbl_cell'])],
+                    [Paragraph("လုံလောက်",    s['tbl_cell']), Paragraph("Occupancy ≥60% + ပိုင်ရှင် ≥4.0",                s['tbl_cell']), Paragraph("40%",  s['tbl_cell'])],
+                    [Paragraph("စံနှုန်းအောက်", s['tbl_cell']), Paragraph("Occupancy <60% သို့မဟုတ် ပိုင်ရှင် <4.0",      s['tbl_cell']), Paragraph("0%",   s['tbl_cell'])],
+                ], s))
+                story.append(Paragraph("၃.  ဒဏ်ကြေး — ရုံးစီမံ", s['sec_head']))
+                story.append(navy_box("ဆုငွေထုပ်မှသာ နုတ်ရမည်", s))
+                story.append(pen_tbl([
+                    [Paragraph("<b>အကြောင်း</b>", s['tbl_hdr']), Paragraph("<b>နုတ်ငွေ</b>", s['tbl_hdr'])],
+                    [Paragraph("Property report နောက်ကျ/မပြည့်စုံ", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                    [Paragraph("ပိုင်ရှင်တိုင်ကြားချက် (မှတ်တမ်းပါ)", s['tbl_cell']), Paragraph(f"{fmt_pen(penalty_cap)} အထိ", s['tbl_cell'])],
+                    [Paragraph("ပိုင်ရှင်/ဧည့်သည် လျှို့ဝှက်ချက် ချိုးဖောက်", s['tbl_cell']), Paragraph("ဆုထုပ် အပြည့် နုတ်နိုင်", s['tbl_cell'])],
+                ], s))
+
+            story.append(Paragraph("၄.  လ အကောင်းဆုံးဝန်ထမ်း", s['sec_head']))
+            story.append(Paragraph(
+                f"ဗိလာ review book သို့မဟုတ် online review (Airbnb, Google) တွင် ဧည့်သည်ချီးကျူးချက်ရသောဝန်ထမ်း ဆုနိုင်ပိုင်ခွင့်ရှိ — "
+                f"ဆု: <b>{fmt_thb(eom_reward)}</b> + ဂုဏ်ထူးဆောင်လက်မှတ်", s['body']))
+            story.append(Spacer(1, 0.4*cm))
+            story += sig_block(s, lang)
+
         return story
-
     return content
-
-# ─── B2B AGREEMENT ─────────────────────────────────────────────
-
-# ─── B2B Role-Specific Scope of Work ─────────────────────────────────────────
-B2B_ROLE_SCOPE = {
-    "en": {
-        "Villa Manager (B2B)": [
-            "Oversee day-to-day operations of assigned villa(s) on behalf of MPS, including property walkthroughs, guest relations, check-in/check-out coordination, and owner liaison.",
-            "Supervise and coordinate housekeeping, maintenance, and vendor services to ensure property standards are maintained at all times.",
-            "Monitor and optimise revenue performance in collaboration with MPS: OTA listings, dynamic pricing strategy, and occupancy targets.",
-            "Submit monthly property reports to MPS covering occupancy, maintenance issues, guest feedback, and financial summaries.",
-            "Act as the primary on-ground point of contact for property owners and guests throughout the collaboration period.",
-        ],
-        "Property Management Company": [
-            "Provide comprehensive management services for assigned properties including operations, revenue management, and guest experience.",
-            "Maintain property standards in line with MPS brand guidelines and property owner expectations.",
-            "Coordinate housekeeping, maintenance, and third-party vendors for all managed properties.",
-            "Submit monthly reports to MPS on all assigned properties.",
-        ],
-        "Revenue & Booking Manager": [
-            "Manage OTA channel listings (Airbnb, Booking.com, and others) including written content, photos, pricing, and availability calendars.",
-            "Implement dynamic pricing strategies to optimise revenue and occupancy.",
-            "Process and confirm bookings, manage calendar availability, and respond to guest inquiries within agreed timeframes.",
-            "Provide monthly revenue performance reports and analysis to MPS.",
-        ],
-        "Chef / Catering Service": [
-            "Provide professional in-villa chef and catering services for MPS guests upon request, including menu planning, grocery sourcing, cooking, and post-service kitchen clean-up.",
-            "Accommodate all dietary requirements, allergies, and special guest requests as communicated by MPS or the guest.",
-            "Maintain high standards of food hygiene, kitchen cleanliness, and food safety in compliance with Thai public health standards.",
-            "Manage catering for villa events, private dinners, and group bookings as scheduled and agreed with MPS.",
-            "Provide itemised grocery receipts for reimbursement in accordance with the agreed billing process.",
-        ],
-        "Cleaning Service Provider": [
-            "Provide professional cleaning services for MPS-managed villas including pre-arrival deep clean, post-departure clean, and mid-stay housekeeping as scheduled.",
-            "Manage laundry, linen changes, and towel service according to MPS villa-book standards.",
-            "Maintain a cleaning supply inventory per property and notify MPS of replenishment needs in advance.",
-            "Ensure all cleaning meets the inspection standard defined in MPS's villa checklist, with a signed completion record where required.",
-            "All cleaning staff must adhere to MPS's guest confidentiality, professional conduct, and presentation standards.",
-        ],
-        "Guest Experience Manager": [
-            "Coordinate the complete guest journey including pre-arrival communication, welcome, in-stay support, and post-stay follow-up.",
-            "Arrange concierge services: restaurant reservations, excursions, transport, car rental, and special occasion arrangements.",
-            "Handle guest complaints promptly and professionally, escalating to MPS management where appropriate.",
-            "Collect and document guest feedback after each stay and submit to MPS.",
-        ],
-        "Booking Agent / OTA Manager": [
-            "Manage OTA accounts and property listings on behalf of MPS including descriptions, photographs, pricing, and availability.",
-            "Process booking inquiries, confirmations, modifications, and cancellations in a timely and professional manner.",
-            "Maintain accurate availability calendars and coordinate with on-ground property teams.",
-            "Report booking performance, conversion metrics, and channel analysis to MPS monthly.",
-        ],
-        "Maintenance & Handyman Contractor": [
-            "Respond to maintenance requests for MPS-managed properties within agreed timeframes (emergency: same day; routine: 48 hours).",
-            "Carry out repairs, preventive maintenance, appliance servicing, and minor renovations as directed by MPS.",
-            "Document all work completed with photographs and written reports submitted to MPS.",
-            "Ensure all work complies with safety standards and villa guest-access protocols.",
-        ],
-        "Landscaping & Pool Service": [
-            "Provide scheduled pool maintenance including chemical balancing, brushing, vacuuming, filter cleaning, and equipment checks.",
-            "Maintain villa gardens, tropical planting, and outdoor areas to the standard defined by the property owner and MPS.",
-            "Report any pool, garden, or equipment issues to MPS immediately.",
-        ],
-        "Airport Transfer Service": [
-            "Provide punctual and professional airport and inter-island transfer services for MPS guests as coordinated.",
-            "Maintain clean, air-conditioned vehicles and professional driver presentation at all times.",
-            "Coordinate directly with MPS on arrival/departure schedules, flight changes, and special guest requirements.",
-        ],
-        "Laundry & Linen Service": [
-            "Collect, launder, press, fold, and return villa linen and towels to MPS-managed properties within agreed turnaround times.",
-            "Maintain a linen inventory record per property and report shortfalls or damage to MPS.",
-            "Adhere to changeover schedules agreed with MPS to support seamless guest transitions.",
-        ],
-        "Security Services": [
-            "Provide vetted security personnel and/or monitoring services for MPS-managed properties as agreed.",
-            "Conduct regular property patrols and enforce access control procedures.",
-            "Report all security incidents or suspicious activity to MPS and property owners immediately.",
-        ],
-        "Marketing & Social Media Partner": [
-            "Create and manage branded social media content for MPS and/or assigned properties in line with MPS brand guidelines.",
-            "Develop and execute marketing campaigns across agreed platforms aligned with seasonal and business objectives.",
-            "Report engagement metrics, reach, and campaign ROI to MPS monthly.",
-        ],
-        "Photography & Videography": [
-            "Provide professional photography and videography services for MPS-managed properties as scheduled.",
-            "Deliver fully edited content within agreed timelines in formats suitable for OTA listings, social media, and marketing.",
-            "Retain all raw files and provide to MPS upon request.",
-        ],
-        "Event Coordinator": [
-            "Plan and execute in-villa events including weddings, celebrations, and corporate retreats.",
-            "Coordinate all event vendors: catering, entertainment, décor, and logistics.",
-            "Ensure all events comply with villa house rules, capacity limits, and local authority requirements.",
-        ],
-        "Key Account Manager": [
-            "Manage designated key client relationships on behalf of MPS, serving as the primary point of contact.",
-            "Identify upselling and service expansion opportunities aligned with MPS offerings.",
-            "Report on account health, client satisfaction, and growth opportunities monthly.",
-        ],
-        "Property Consultant / Advisor": [
-            "Provide expert advisory on property acquisition, valuation, and investment in the Koh Samui region.",
-            "Support MPS clients with due diligence, comparative market analysis, and transaction coordination.",
-            "Maintain current knowledge of Koh Samui and Surat Thani property regulations and market conditions.",
-        ],
-    },
-    "th": {
-        "Villa Manager (B2B)": [
-            "ดูแลการดำเนินงานประจำวันของวิลล่าที่ได้รับมอบหมายในนาม MPS รวมถึงการต้อนรับแขก การเช็คอิน/เช็คเอาท์ และการตรวจสอบทรัพย์สิน",
-            "ประสานงานทีมแม่บ้าน ช่างซ่อมบำรุง และผู้ให้บริการเพื่อรักษามาตรฐานทรัพย์สิน",
-            "ติดตามและเพิ่มประสิทธิภาพรายได้ร่วมกับ MPS ผ่านช่องทาง OTA การกำหนดราคา และเป้าหมายการเข้าพัก",
-            "ส่งรายงานทรัพย์สินประจำเดือนให้ MPS ครอบคลุมอัตราการเข้าพัก การซ่อมบำรุง และผลตอบรับจากแขก",
-        ],
-        "Chef / Catering Service": [
-            "ให้บริการเชฟส่วนตัวและบริการจัดเลี้ยงในวิลล่าตามคำขอ รวมถึงวางแผนเมนู ซื้อวัตถุดิบ ปรุงอาหาร และทำความสะอาดหลังบริการ",
-            "รองรับข้อกำหนดด้านอาหาร อาการแพ้ และคำขอพิเศษของแขก",
-            "รักษามาตรฐานสุขอนามัยอาหารตามกฎหมายสาธารณสุขไทย",
-            "จัดการงานเลี้ยงและดินเนอร์ส่วนตัวตามที่ตกลงกับ MPS พร้อมส่งใบเสร็จวัตถุดิบ",
-        ],
-        "Cleaning Service Provider": [
-            "ให้บริการทำความสะอาดวิลล่า ได้แก่ การทำความสะอาดก่อนแขกเข้าพัก หลังแขกออก และระหว่างการเข้าพัก",
-            "ดูแลบริการซักรีดและเปลี่ยนผ้าปูที่นอนตามมาตรฐาน villa book ของ MPS",
-            "ดูแลสต็อกอุปกรณ์ทำความสะอาดและทำความสะอาดให้ได้มาตรฐาน MPS checklist",
-        ],
-        "Guest Experience Manager": [
-            "ประสานงานประสบการณ์แขกตั้งแต่ก่อนเข้าพักจนถึงหลังออก รวมถึงบริการ concierge",
-            "จัดการจองร้านอาหาร กิจกรรม การเดินทาง และงานพิเศษต่างๆ",
-            "รับมือกับข้อร้องเรียนและรายงานผลตอบรับแขกให้ MPS ทราบ",
-        ],
-    },
-    "my": {
-        "Villa Manager (B2B)": [
-            "MPS ကိုယ်စား villa(s)၏ နေ့စဉ်လည်ပတ်မှုကို ကြီးကြပ်ရမည် — ဧည့်သည်ဆက်ဆံရေး၊ check-in/check-out နှင့် အိမ်ခြံမြေစစ်ဆေးမှုများ အပါအဝင်",
-            "ဝန်ဆောင်မှုပေးသူများကို ညှိနှိုင်းကြပ်မတ်၍ အိမ်ခြံမြေစံနှုန်းများကို ထိန်းသိမ်းရမည်",
-            "MPS နှင့် ပူးပေါင်း၍ OTA listing များ၊ ဈေးနှုန်းနှင့် occupancy ပစ်မှတ်များ ကောင်းမွန်လာစေရမည်",
-            "နှစ်လတစ်ကြိမ် property report — occupancy၊ ပြုပြင်ရန်အချက်များ၊ ဧည့်သည်တုံ့ပြန်ချက် — MPS သို့ တင်ပြရမည်",
-        ],
-        "Chef / Catering Service": [
-            "MPS ဧည့်သည်တောင်းဆိုချက်အရ villa တွင် chef ဝန်ဆောင်မှုပေးရမည် — menu စီစဉ်မှု၊ ကုန်ပစ္စည်းဝယ်ယူမှု၊ ချက်ပြုတ်မှု၊ မီးဖိုချောင်သန့်ရှင်းရေး အပါအဝင်",
-            "ဧည့်သည်၏ အစားအသောက်လိုအပ်ချက်များနှင့် အာဟာရဓာတ်မတည့်မှုများကို ဖြည့်ဆည်းပေးရမည်",
-            "ထိုင်းနိုင်ငံ ကျန်းမာရေးစံနှုန်းများနှင့် အညီ မီးဖိုချောင်သန့်ရှင်းမှု ထိန်းသိမ်းရမည်",
-        ],
-        "Cleaning Service Provider": [
-            "ဧည့်သည်မရောက်မီ deep clean၊ ထွက်ပြီးနောက် clean-up နှင့် နေစဉ် housekeeping ဝန်ဆောင်မှုများ ပေးရမည်",
-            "MPS villa-book စံနှုန်းနှင့် အညီ လျာ၊ ဆောင်ရွက်နှင့် ပဝါ ဝန်ဆောင်မှုများ စီမံဆောင်ရွက်ရမည်",
-            "MPS checklist အတိုင်း သန့်ရှင်းရေးစံနှုန်းပြည့်မီနေစေရမည်",
-        ],
-        "Guest Experience Manager": [
-            "ဧည့်သည်ခရီးစဉ် အစမှ အဆုံးအထိ ညှိနှိုင်းဆောင်ရွက်ရမည် — concierge ဝန်ဆောင်မှုများ အပါအဝင်",
-            "ဧည့်သည်တောင်းဆိုသည့် စားသောက်ဆိုင် ကြိုတင်မှာယူမှု၊ ခရီးသွားလှုပ်ရှားမှုများ၊ သယ်ယူပို့ဆောင်ရေး စီမံဆောင်ရွက်ရမည်",
-            "ဧည့်သည်တုံ့ပြန်ချက်ကို မှတ်တမ်းတင်ပြီး MPS သို့ တင်ပြရမည်",
-        ],
-    },
-}
 
 def build_b2b(data, lang):
     col = data.get('collaborator', {})

@@ -80,7 +80,7 @@ body {
 }
 .tri-label .en  { font-weight: 600; font-size: 0.875rem; color: hsl(var(--foreground)); }
 .tri-label .th  { font-size: 0.8rem;  color: hsl(var(--muted-foreground)); font-family: 'Noto Sans Thai', sans-serif; }
-.tri-label .my  { font-size: 0.78rem; color: hsl(var(--muted-foreground)); font-family: 'Pyidaungsu', sans-serif; }
+.tri-label .my  { font-size: 0.78rem; color: hsl(var(--muted-foreground)); font-family: 'Zawgyi-One', sans-serif; }
 
 /* ─── Step wizard progress ─── */
 .step-indicator {
