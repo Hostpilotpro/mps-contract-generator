@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { authStore } from "./authStore";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
@@ -14,9 +15,14 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const headers: Record<string, string> = {};
+  if (data) headers["Content-Type"] = "application/json";
+  const token = authStore.getToken();
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
   const res = await fetch(`${API_BASE}${url}`, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
   });
 

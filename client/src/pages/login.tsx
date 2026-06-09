@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface LoginProps {
-  onLogin: (role: string) => void;
+  onLogin: (token: string, user: { username: string; role: string }) => void;
 }
 
 export default function Login({ onLogin }: LoginProps) {
@@ -18,8 +18,8 @@ export default function Login({ onLogin }: LoginProps) {
       apiRequest("POST", "/api/login", { username, password }),
     onSuccess: async (res) => {
       const data = await res.json();
-      if (data.success) {
-        onLogin(data.role);
+      if (data.success && data.token) {
+        onLogin(data.token, { username: data.username, role: data.role });
       } else {
         setError(data.error || "Invalid credentials");
       }

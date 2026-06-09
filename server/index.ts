@@ -1,5 +1,4 @@
 import express, { type Request, Response, NextFunction } from "express";
-import session from "express-session";
 import { registerRoutes } from "./routes";
 import { registerAuthRoutes } from "./auth";
 import { serveStatic } from "./static";
@@ -24,16 +23,7 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
-// ── Session middleware ─────────────────────────────────────────────────────────
-app.use(session({
-  secret: process.env.SESSION_SECRET || "mps-hr-secret-koh-samui-2026",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false, // set true behind HTTPS proxy (Railway handles this)
-    maxAge: 10 * 60 * 60 * 1000, // 10 hours
-  },
-}));
+// Token-based auth — no cookies needed (works in iframes + Railway)
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
